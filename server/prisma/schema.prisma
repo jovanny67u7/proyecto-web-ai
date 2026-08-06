@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../ERD.svg"
+  theme    = "forest"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           Int          @id @default(autoincrement())
+  nombre       String
+  email        String       @unique
+  password     String
+  creadoEn     DateTime     @default(now())
+  roles        UsuarioRol[]
+  cotizaciones Cotizacion[]
+
+  @@map("usuarios")
+}
+
+model Rol {
+  id       Int          @id @default(autoincrement())
+  nombre   String       @unique
+  usuarios UsuarioRol[]
+  permisos RolPermiso[]
+
+  @@map("roles")
+}
+
+model Permiso {
+  id     Int          @id @default(autoincrement())
+  nombre String       @unique
+  roles  RolPermiso[]
+
+  @@map("permisos")
+}
+
+model UsuarioRol {
+  usuarioId Int
+  rolId     Int
+  usuario   Usuario @relation(fields: [usuarioId], references: [id])
+  rol       Rol     @relation(fields: [rolId], references: [id])
+
+  @@id([usuarioId, rolId])
+  @@map("usuario_rol")
+}
+
+model RolPermiso {
+  rolId     Int
+  permisoId Int
+  rol       Rol     @relation(fields: [rolId], references: [id])
+  permiso   Permiso @relation(fields: [permisoId], references: [id])
+
+  @@id([rolId, permisoId])
+  @@map("rol_permiso")
+}
+
+// -------------------- CATÁLOGO Y COTIZACIONES --------------------
+
+model Categoria {
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  productos Producto[]
+
+  @@map("categorias")
+}
+
+model Producto {
+  id             Int          @id @default(autoincrement())
+  nombre         String
+  descripcion    String
+  caracteristicas String      // JSON serializado: array de módulos disponibles, ej. ["Respuestas en IG/Messenger", "Agenda en Google Calendar"]
+  imagenUrl      String?
+  categoriaId    Int
+  categoria      Categoria    @relation(fields: [categoriaId], references: [id])
+  cotizaciones   Cotizacion[]
+  creadoEn       DateTime     @default(now())
+
+  @@map("productos")
+}
+
+model ClienteConfianza {
+  id           Int    @id @default(autoincrement())
+  nombreEmpresa String
+  logoUrl      String?
+  websiteUrl   String?
+
+  @@map("clientes_confianza")
+}
+
+model Cotizacion {
+  id                    Int      @id @default(autoincrement())
+  usuarioId             Int
+  productoId            Int
+  modulosSeleccionados  String   // JSON serializado: array de módulos elegidos por el usuario
+  fecha                 DateTime @default(now())
+  usuario               Usuario  @relation(fields: [usuarioId], references: [id])
+  producto              Producto @relation(fields: [productoId], references: [id])
+
+  @@map("cotizaciones")
+}
