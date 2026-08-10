@@ -4,17 +4,33 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+// Migra los roles de sus nombres originales en español (Administrador, Editor,
+// Usuario) a los códigos definitivos ADMIN/EDITOR/USER. Actualiza en el mismo
+// registro (misma id) en vez de crear uno nuevo, así los usuarios ya vinculados
+// a ese rol vía UsuarioRol conservan el vínculo intacto. Si el registro
+// anterior no existe (base de datos nueva), lo crea directamente con el
+// código final.
 async function seedRoles() {
-  const roles = ['Administrador', 'Editor', 'Usuario'];
-  for (const nombre of roles) {
-    await prisma.rol.upsert({ where: { nombre }, update: {}, create: { nombre } });
+  const migraciones = [
+    { anterior: 'Administrador', nuevo: 'ADMIN' },
+    { anterior: 'Editor', nuevo: 'EDITOR' },
+    { anterior: 'Usuario', nuevo: 'USER' },
+  ];
+
+  for (const { anterior, nuevo } of migraciones) {
+    const rolAnterior = await prisma.rol.findUnique({ where: { nombre: anterior } });
+    if (rolAnterior) {
+      await prisma.rol.update({ where: { id: rolAnterior.id }, data: { nombre: nuevo } });
+    } else {
+      await prisma.rol.upsert({ where: { nombre: nuevo }, update: {}, create: { nombre: nuevo } });
+    }
   }
-  console.log('Roles creados: Administrador, Editor, Usuario');
+  console.log('Roles sincronizados: ADMIN, EDITOR, USER');
 }
 
 async function seedAdmin() {
   const email = 'jovanny@asidesimple.ai';
-  const rolAdmin = await prisma.rol.findUnique({ where: { nombre: 'Administrador' } });
+  const rolAdmin = await prisma.rol.findUnique({ where: { nombre: 'ADMIN' } });
 
   const existente = await prisma.usuario.findUnique({ where: { email } });
   if (existente) {

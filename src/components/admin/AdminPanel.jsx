@@ -5,20 +5,22 @@ import TabUsuarios from './TabUsuarios';
 import TabReportes from './TabReportes';
 
 const TABS = [
-  { id: 'productos', label: 'Productos y Categorías', Componente: TabProductos },
-  { id: 'clientes', label: 'Clientes de Confianza', Componente: TabClientes },
-  { id: 'usuarios', label: 'Usuarios', Componente: TabUsuarios },
-  { id: 'reportes', label: 'Reportes', Componente: TabReportes },
+  { id: 'productos', label: 'Productos y Categorías', Componente: TabProductos, roles: ['ADMIN', 'EDITOR'] },
+  { id: 'clientes', label: 'Clientes de Confianza', Componente: TabClientes, roles: ['ADMIN', 'EDITOR'] },
+  { id: 'usuarios', label: 'Usuarios', Componente: TabUsuarios, roles: ['ADMIN'] },
+  { id: 'reportes', label: 'Reportes', Componente: TabReportes, roles: ['ADMIN'] },
 ];
 
-export default function AdminPanel() {
-  const [tabActiva, setTabActiva] = useState('productos');
-  const TabActual = TABS.find((t) => t.id === tabActiva).Componente;
+// EDITOR solo ve Productos y Clientes: no puede ver ni gestionar Usuarios ni Reportes.
+export default function AdminPanel({ rol }) {
+  const tabsVisibles = TABS.filter((tab) => tab.roles.includes(rol));
+  const [tabActiva, setTabActiva] = useState(tabsVisibles[0]?.id);
+  const TabActual = tabsVisibles.find((t) => t.id === tabActiva)?.Componente || tabsVisibles[0]?.Componente;
 
   return (
     <div>
       <div style={tabsBarStyles}>
-        {TABS.map((tab) => (
+        {tabsVisibles.map((tab) => (
           <button
             key={tab.id}
             type="button"

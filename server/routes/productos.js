@@ -45,7 +45,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', verificarToken, autorizarRoles('Administrador'), upload.single('imagen'), async (req, res) => {
+router.post('/', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), upload.single('imagen'), async (req, res) => {
   try {
     const { nombre, descripcion, categoriaId, modulos } = req.body;
     if (!nombre || !descripcion || !categoriaId) {
@@ -70,7 +70,7 @@ router.post('/', verificarToken, autorizarRoles('Administrador'), upload.single(
   }
 });
 
-router.put('/:id', verificarToken, autorizarRoles('Administrador'), upload.single('imagen'), async (req, res) => {
+router.put('/:id', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), upload.single('imagen'), async (req, res) => {
   try {
     const { nombre, descripcion, categoriaId, modulos } = req.body;
     const id = Number(req.params.id);
@@ -91,7 +91,7 @@ router.put('/:id', verificarToken, autorizarRoles('Administrador'), upload.singl
   }
 });
 
-router.delete('/:id', verificarToken, autorizarRoles('Administrador'), async (req, res) => {
+router.delete('/:id', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), async (req, res) => {
   try {
     const id = Number(req.params.id);
     await prisma.cotizacion.deleteMany({ where: { productoId: id } });

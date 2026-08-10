@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { contenedorVariants, itemVariants } from '../utils/motionVariants';
+import { AnimatePresence, motion } from 'framer-motion';
 import { API_URL } from '../utils/authApi';
+import { contenedorVariants, itemVariants } from '../utils/motionVariants';
 import QuoteModal from '../components/QuoteModal';
 
 const ICONOS_POR_CATEGORIA = {
@@ -16,14 +16,39 @@ const ProductCard = ({ producto, onCotizar }) => {
   const cardDynamicStyle = {
     ...productCardStyle,
     transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
-    borderColor: isHovered ? 'rgba(132, 189, 0, 0.4)' : 'var(--border)',
-    boxShadow: isHovered ? '0 20px 60px rgba(0,0,0,0.5)' : 'none',
+    borderColor: isHovered ? 'rgba(132, 189, 0, 0.5)' : 'var(--border)',
+    boxShadow: isHovered ? '0 20px 50px rgba(132, 189, 0, 0.35)' : 'none',
   };
 
   const icono = ICONOS_POR_CATEGORIA[producto.categoria?.nombre] || '🛠️';
 
   return (
-    <motion.div style={cardDynamicStyle} variants={itemVariants} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+    <motion.article
+      style={{ position: 'relative', ...cardDynamicStyle }}
+      variants={itemVariants}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Tooltip que aparece al pasar el puntero: adelanta los módulos incluidos */}
+      <AnimatePresence>
+        {isHovered && producto.caracteristicas?.length > 0 && (
+          <motion.div
+            style={tooltipStyle}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+          >
+            <strong style={tooltipTituloStyle}>Incluye</strong>
+            <ul style={tooltipListaStyle}>
+              {producto.caracteristicas.slice(0, 4).map((modulo) => (
+                <li key={modulo}>{modulo}</li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div style={cardInnerStyle}>
         <span style={badgeStyle}>{producto.categoria?.nombre}</span>
         {producto.imagenUrl ? (
@@ -40,7 +65,7 @@ const ProductCard = ({ producto, onCotizar }) => {
           Solicitar cotización ↗
         </button>
       </div>
-    </motion.div>
+    </motion.article>
   );
 };
 
@@ -112,3 +137,17 @@ const cardInnerStyle = { background: 'var(--surface-2)', borderRadius: 'calc(1.8
 const badgeStyle = { display: 'inline-block', background: 'rgba(132, 189, 0, 0.15)', color: 'var(--brand-green)', border: '0.5px solid rgba(132, 189, 0, 0.3)', borderRadius: '999px', padding: '0.25rem 0.75rem', fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '1.5rem' };
 const iconWrapStyle = { width: '52px', height: '52px', borderRadius: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '1.25rem', background: 'rgba(255,255,255,0.05)' };
 const imagenStyle = { width: '52px', height: '52px', borderRadius: '1rem', objectFit: 'cover', marginBottom: '1.25rem' };
+const tooltipStyle = {
+  position: 'absolute',
+  bottom: 'calc(100% + 10px)',
+  left: 0,
+  right: 0,
+  background: 'var(--brand-dark)',
+  border: '0.5px solid rgba(132, 189, 0, 0.4)',
+  borderRadius: '0.8rem',
+  padding: '0.9rem 1.1rem',
+  boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+  zIndex: 10,
+};
+const tooltipTituloStyle = { color: 'var(--brand-green)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: "'Poppins', sans-serif" };
+const tooltipListaStyle = { margin: '0.5rem 0 0', paddingLeft: '1.1rem', fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: 1.6 };

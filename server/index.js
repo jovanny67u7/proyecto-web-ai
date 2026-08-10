@@ -44,9 +44,9 @@ app.post('/api/auth/registro', async (req, res) => {
       return res.status(409).json({ error: 'Ya existe un usuario registrado con ese email.' });
     }
 
-    const rolUsuario = await prisma.rol.findUnique({ where: { nombre: 'Usuario' } });
+    const rolUsuario = await prisma.rol.findUnique({ where: { nombre: 'USER' } });
     if (!rolUsuario) {
-      return res.status(500).json({ error: 'El rol "Usuario" no existe. Ejecuta el seed de roles.' });
+      return res.status(500).json({ error: 'El rol "USER" no existe. Ejecuta el seed de roles.' });
     }
 
     // Parte 4: hash de contraseña con bcrypt antes de guardar.
@@ -97,6 +97,10 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
+    if (!usuario.activo) {
+      return res.status(403).json({ error: 'Tu cuenta ha sido deshabilitada. Contacta a un administrador.' });
+    }
+
     const roles = usuario.roles.map((ur) => ur.rol.nombre);
 
     const token = jwt.sign(
@@ -133,13 +137,13 @@ app.get('/api/dashboard', verificarToken, (req, res) => {
   return res.json({ mensaje: `Bienvenido ${req.usuario.nombre}`, roles: req.usuario.roles });
 });
 
-// Solo Administrador.
-app.get('/api/admin', verificarToken, autorizarRoles('Administrador'), (req, res) => {
+// Solo ADMIN.
+app.get('/api/admin', verificarToken, autorizarRoles('ADMIN'), (req, res) => {
   return res.json({ mensaje: 'Panel de administración: acceso concedido.' });
 });
 
-// Administrador o Editor.
-app.get('/api/editor', verificarToken, autorizarRoles('Administrador', 'Editor'), (req, res) => {
+// ADMIN o EDITOR.
+app.get('/api/editor', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), (req, res) => {
   return res.json({ mensaje: 'Panel de edición: acceso concedido.' });
 });
 

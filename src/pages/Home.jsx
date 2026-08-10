@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { contenedorVariants, itemVariants } from '../utils/motionVariants';
+import BannerEstacional from '../components/BannerEstacional';
 
 import fondoAI from '../../img/FONDO-AI.png';
 import chatbotImg from '../../img/CHATBOT-DESCRIPTION.png';
@@ -102,6 +103,9 @@ function AnilloDecorativo({ tamano = 320, color = 'var(--brand-green)', duracion
 export default function Home() {
   return (
     <>
+      {/* BANNER ESTACIONAL — justo debajo del menú de navegación fijo */}
+      <BannerEstacional />
+
       {/* HERO — fondo con imagen, overlay oscuro y partículas animadas */}
       <section style={heroWrapperStyles}>
         <div style={{ ...heroBgStyles, backgroundImage: `url(${fondoAI})` }} />
@@ -137,7 +141,7 @@ export default function Home() {
 
       {/* SECCIÓN DE SERVICIOS — layout en Z, alternado y responsivo */}
       <section className="container" style={zpatternSectionStyles}>
-        <motion.div
+        <motion.article
           className="zpattern-row"
           variants={contenedorVariants}
           initial="oculto"
@@ -166,9 +170,9 @@ export default function Home() {
             <AnilloDecorativo tamano={250} color="#ffffff" duracion={22} inverso opacidad={0.12} />
             <img src={chatbotImg} alt="Chatbot inteligente asídesimple AI" style={zpatternImgStyles} />
           </motion.div>
-        </motion.div>
+        </motion.article>
 
-        <motion.div
+        <motion.article
           className="zpattern-row"
           variants={contenedorVariants}
           initial="oculto"
@@ -197,7 +201,7 @@ export default function Home() {
               Conoce más ↗
             </Link>
           </motion.div>
-        </motion.div>
+        </motion.article>
       </section>
 
       {/* CONTACTO */}

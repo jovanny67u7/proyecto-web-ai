@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', verificarToken, autorizarRoles('Administrador'), upload.single('logo'), async (req, res) => {
+router.post('/', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), upload.single('logo'), async (req, res) => {
   try {
     const { nombreEmpresa, websiteUrl } = req.body;
     if (!nombreEmpresa) {
@@ -38,7 +38,7 @@ router.post('/', verificarToken, autorizarRoles('Administrador'), upload.single(
   }
 });
 
-router.put('/:id', verificarToken, autorizarRoles('Administrador'), upload.single('logo'), async (req, res) => {
+router.put('/:id', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), upload.single('logo'), async (req, res) => {
   try {
     const { nombreEmpresa, websiteUrl } = req.body;
     const id = Number(req.params.id);
@@ -57,7 +57,7 @@ router.put('/:id', verificarToken, autorizarRoles('Administrador'), upload.singl
   }
 });
 
-router.delete('/:id', verificarToken, autorizarRoles('Administrador'), async (req, res) => {
+router.delete('/:id', verificarToken, autorizarRoles('ADMIN', 'EDITOR'), async (req, res) => {
   try {
     const id = Number(req.params.id);
     await prisma.clienteConfianza.delete({ where: { id } });

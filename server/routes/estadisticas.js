@@ -5,7 +5,7 @@ const { verificarToken, autorizarRoles } = require('../middlewares/auth');
 const router = express.Router();
 
 // Admin: métricas básicas para el módulo de Reportes/Estadísticas.
-router.get('/', verificarToken, autorizarRoles('Administrador'), async (req, res) => {
+router.get('/', verificarToken, autorizarRoles('ADMIN'), async (req, res) => {
   try {
     const [totalUsuarios, totalProductos, totalClientes, totalCotizaciones, agrupadoPorProducto] =
       await Promise.all([

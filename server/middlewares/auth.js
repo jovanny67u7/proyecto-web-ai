@@ -1,9 +1,14 @@
 const jwt = require('jsonwebtoken');
+const prisma = require('../db');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Parte 3/4: valida que exista un JWT vigente antes de dejar pasar la petición.
-function verificarToken(req, res, next) {
+// Además de validar la firma/expiración, revisa en vivo contra la base de
+// datos que la cuenta siga activa: si un Administrador deshabilita a un
+// usuario a mitad de sesión, el acceso se corta de inmediato en la siguiente
+// petición en vez de esperar a que expire el token (hasta 2h).
+async function verificarToken(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -14,6 +19,16 @@ function verificarToken(req, res, next) {
 
   try {
     const payload = jwt.verify(token, JWT_SECRET);
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: payload.id },
+      select: { activo: true },
+    });
+
+    if (!usuario || !usuario.activo) {
+      return res.status(403).json({ error: 'Tu cuenta ha sido deshabilitada. Contacta a un administrador.' });
+    }
+
     req.usuario = payload; // { id, nombre, email, roles }
     next();
   } catch (err) {
@@ -24,7 +39,7 @@ function verificarToken(req, res, next) {
   }
 }
 
-// Parte 3: control de acceso por rol. Uso: autorizarRoles('Administrador', 'Editor')
+// Parte 3: control de acceso por rol. Uso: autorizarRoles('ADMIN', 'EDITOR')
 function autorizarRoles(...rolesPermitidos) {
   return (req, res, next) => {
     const rolesUsuario = req.usuario?.roles || [];

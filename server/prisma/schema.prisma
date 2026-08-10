@@ -15,6 +15,7 @@ model Usuario {
   nombre       String
   email        String       @unique
   password     String
+  activo       Boolean      @default(true)
   creadoEn     DateTime     @default(now())
   roles        UsuarioRol[]
   cotizaciones Cotizacion[]

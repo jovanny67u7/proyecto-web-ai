@@ -28,7 +28,7 @@ router.post('/', verificarToken, async (req, res) => {
 });
 
 // Admin: listado de solicitudes de cotización.
-router.get('/', verificarToken, autorizarRoles('Administrador'), async (req, res) => {
+router.get('/', verificarToken, autorizarRoles('ADMIN'), async (req, res) => {
   try {
     const cotizaciones = await prisma.cotizacion.findMany({
       include: {

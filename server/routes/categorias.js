@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', verificarToken, autorizarRoles('Administrador'), async (req, res) => {
+router.post('/', verificarToken, autorizarRoles('ADMIN'), async (req, res) => {
   try {
     const { nombre } = req.body;
     if (!nombre) {
@@ -35,7 +35,7 @@ router.post('/', verificarToken, autorizarRoles('Administrador'), async (req, re
   }
 });
 
-router.delete('/:id', verificarToken, autorizarRoles('Administrador'), async (req, res) => {
+router.delete('/:id', verificarToken, autorizarRoles('ADMIN'), async (req, res) => {
   try {
     const id = Number(req.params.id);
     const productosAsociados = await prisma.producto.count({ where: { categoriaId: id } });

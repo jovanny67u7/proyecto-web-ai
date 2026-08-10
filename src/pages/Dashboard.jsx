@@ -42,12 +42,13 @@ export default function Dashboard() {
     }
   };
 
-  const esAdmin = usuario?.roles?.includes('Administrador');
-  const esEditor = usuario?.roles?.includes('Editor');
+  const esAdmin = usuario?.roles?.includes('ADMIN');
+  const esEditor = usuario?.roles?.includes('EDITOR');
+  const tieneAccesoAlPanel = esAdmin || esEditor;
 
   return (
     <motion.section
-      style={{ padding: '2rem 1rem', maxWidth: esAdmin ? '1100px' : '700px', margin: '0 auto' }}
+      style={{ padding: '2rem 1rem', maxWidth: tieneAccesoAlPanel ? '1100px' : '700px', margin: '0 auto' }}
       variants={contenedorVariants}
       initial="oculto"
       animate="visible"
@@ -62,23 +63,15 @@ export default function Dashboard() {
         <button onClick={cerrarSesion} className="btn-secondary">Cerrar sesión</button>
       </motion.div>
 
-      {esAdmin ? (
+      {tieneAccesoAlPanel ? (
         <motion.div variants={itemVariants}>
-          <AdminPanel />
+          <AdminPanel rol={esAdmin ? 'ADMIN' : 'EDITOR'} />
         </motion.div>
       ) : (
-        <>
-          <motion.div style={cardStyles} variants={itemVariants}>
-            <p><strong>Email:</strong> {usuario?.email}</p>
-            <p><strong>Roles:</strong> {usuario?.roles?.join(', ')}</p>
-          </motion.div>
-
-          {esEditor && (
-            <motion.div style={{ ...cardStyles, borderColor: 'var(--brand-blue)' }} variants={itemVariants}>
-              ✏️ Módulo de edición visible para <strong>Administrador</strong> y <strong>Editor</strong>.
-            </motion.div>
-          )}
-        </>
+        <motion.div style={cardStyles} variants={itemVariants}>
+          <p><strong>Email:</strong> {usuario?.email}</p>
+          <p><strong>Roles:</strong> {usuario?.roles?.join(', ')}</p>
+        </motion.div>
       )}
     </motion.section>
   );

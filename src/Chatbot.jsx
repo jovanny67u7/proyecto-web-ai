@@ -40,7 +40,6 @@ const Chatbot = () => {
       sessionId: sessionId,
       message: userText
     };
-    console.log("Datos de entrada limpios listos para envío:", payload);
 
     try {
       const WEBHOOK_URL = 'https://159.65.111.84.sslip.io/webhook/asidesimple-chat';
