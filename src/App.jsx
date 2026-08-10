@@ -44,7 +44,7 @@ function BarraNavegacionAuth() {
 
   return (
     <div style={{ display: 'flex', gap: '1rem' }}>
-      <button style={btnGhostStyle} onClick={() => navigate('/login')}>Iniciar sesión</button>
+      <button className="desktop-only" style={btnGhostStyle} onClick={() => navigate('/login')}>Iniciar sesión</button>
       <button className="btn-primary" style={{ padding: '0.5rem 1.2rem' }} onClick={() => navigate('/login')}>Registrar</button>
     </div>
   );
@@ -52,6 +52,7 @@ function BarraNavegacionAuth() {
 
 function App() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [isSummerPromo, setIsSummerPromo] = useState(false);
 
@@ -107,8 +108,35 @@ function App() {
           <Link to="/opiniones" style={linkStyles}>Opiniones</Link>
           <input type="text" placeholder="Búsqueda avanzada..." style={searchInputStyle} />
         </div>
-        
+
+        {/* MENÚ HAMBURGUESA — solo visible en móvil, sustituye a los enlaces ocultos por .desktop-only */}
+        <button
+          type="button"
+          className="mobile-menu-btn"
+          style={mobileMenuBtnStyles}
+          onClick={() => setIsMobileMenuOpen((abierto) => !abierto)}
+          aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isMobileMenuOpen}
+        >
+          {isMobileMenuOpen ? '✕' : '☰'}
+        </button>
+
         <BarraNavegacionAuth />
+
+        {/* PANEL DESPLEGABLE MÓVIL — ancla directamente al navbar (position: fixed),
+            así siempre queda alineado sin recalcular el offset dinámico del banner. */}
+        {isMobileMenuOpen && (
+          <div className="mobile-menu-panel" style={mobileMenuPanelStyles}>
+            <Link to="/productos" style={dropdownItemStyle} onClick={() => setIsMobileMenuOpen(false)}>🤖 Chatbots IA</Link>
+            <Link to="/productos" style={dropdownItemStyle} onClick={() => setIsMobileMenuOpen(false)}>📊 CRM Inteligente</Link>
+            <Link to="/productos" style={dropdownItemStyle} onClick={() => setIsMobileMenuOpen(false)}>⚡ Automatizaciones</Link>
+            <div style={mobileMenuDividerStyles} />
+            <Link to="/nosotros" style={dropdownItemStyle} onClick={() => setIsMobileMenuOpen(false)}>Nosotros</Link>
+            <Link to="/clientes" style={dropdownItemStyle} onClick={() => setIsMobileMenuOpen(false)}>Clientes</Link>
+            <Link to="/opiniones" style={dropdownItemStyle} onClick={() => setIsMobileMenuOpen(false)}>Opiniones</Link>
+            <input type="text" placeholder="Búsqueda avanzada..." style={mobileSearchInputStyle} />
+          </div>
+        )}
       </nav>
 
       {/* CONTENEDOR DINÁMICO */}
@@ -202,6 +230,24 @@ const footerStyle = { borderTop: '0.5px solid var(--border)', padding: '4rem 2re
 const footerInnerStyle = { display: 'flex', flexWrap: 'wrap', gap: '2rem', justifyContent: 'space-between' };
 const dropdownStyle = { position: 'absolute', top: '100%', left: '0', background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.8rem', padding: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: '180px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', zIndex: 1001 };
 const dropdownItemStyle = { color: 'var(--text)', textDecoration: 'none', fontSize: '0.85rem', padding: '0.6rem 1rem', borderRadius: '0.5rem', transition: 'background 0.2s' };
+const mobileMenuBtnStyles = { display: 'none', background: 'transparent', border: 'none', color: 'var(--text)', fontSize: '1.2rem', cursor: 'pointer', padding: '0.3rem 0.5rem' };
+const mobileMenuPanelStyles = {
+  position: 'absolute',
+  top: 'calc(100% + 0.75rem)',
+  left: 0,
+  right: 0,
+  background: 'var(--surface-2)',
+  border: '0.5px solid var(--border)',
+  borderRadius: '1.2rem',
+  padding: '0.75rem',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.2rem',
+  boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+  zIndex: 1001,
+};
+const mobileMenuDividerStyles = { height: '0.5px', background: 'var(--border)', margin: '0.4rem 0.5rem' };
+const mobileSearchInputStyle = { ...searchInputStyle, width: '100%', marginTop: '0.4rem', padding: '0.7rem 1rem' };
 const promoBannerStyle = { position: 'fixed', top: 0, left: 0, width: '100%', background: 'linear-gradient(135deg, var(--brand-green), var(--brand-blue))', color: '#fff', textAlign: 'center', padding: '0.6rem', fontSize: '0.85rem', fontWeight: 600, zIndex: 10000 };
 const socialIconStyle = { 
   width: '32px', 

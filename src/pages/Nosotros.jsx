@@ -72,7 +72,7 @@ export default function Nosotros() {
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
       >
-        <motion.div className="eyebrow" style={{ display: 'flex', justifyContent: 'center', margin: '0 auto 1rem' }} variants={itemVariants}>
+        <motion.div className="eyebrow" variants={itemVariants}>
           <span className="eyebrow-dot"></span> Ayuda
         </motion.div>
         <motion.h2 style={faqTitleStyles} variants={itemVariants}>

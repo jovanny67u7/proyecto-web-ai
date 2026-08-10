@@ -1,25 +1,25 @@
-export const panelStyles = { display: 'flex', flexDirection: 'column', gap: '1.5rem' };
+export const panelStyles = { display: 'flex', flexDirection: 'column', gap: '2rem' };
 
 export const cardStyles = {
   background: 'var(--surface)',
   border: '0.5px solid var(--border)',
   borderRadius: '1rem',
-  padding: '1.5rem',
+  padding: '1.75rem',
 };
 
 export const formGridStyles = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-  gap: '1rem',
-  marginBottom: '1rem',
+  gap: '1.25rem',
+  marginBottom: '1.25rem',
 };
 
 export const labelStyles = {
   display: 'block',
   fontSize: '0.78rem',
   color: 'var(--text-muted)',
-  marginBottom: '0.35rem',
-  marginTop: '0.75rem',
+  marginBottom: '0.5rem',
+  marginTop: '1.1rem',
 };
 
 export const inputStyles = {

@@ -29,19 +29,6 @@ export default function Dashboard() {
       });
   }, [navigate]);
 
-  const cerrarSesion = async () => {
-    const token = localStorage.getItem('token');
-    try {
-      await fetch(`${API_URL}/api/auth/logout`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } finally {
-      limpiarSesion();
-      navigate('/login');
-    }
-  };
-
   const esAdmin = usuario?.roles?.includes('ADMIN');
   const esEditor = usuario?.roles?.includes('EDITOR');
   const tieneAccesoAlPanel = esAdmin || esEditor;
@@ -53,14 +40,11 @@ export default function Dashboard() {
       initial="oculto"
       animate="visible"
     >
-      <motion.div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }} variants={itemVariants}>
-        <div>
-          <h1 style={{ marginBottom: '0.5rem' }}>
-            Hola, <span className="gradient-text">{usuario?.nombre}</span>
-          </h1>
-          <p style={{ color: 'var(--text-muted)' }}>{estadoServidor}</p>
-        </div>
-        <button onClick={cerrarSesion} className="btn-secondary">Cerrar sesión</button>
+      <motion.div style={{ marginBottom: '2rem' }} variants={itemVariants}>
+        <h1 style={{ marginBottom: '0.5rem' }}>
+          Hola, <span className="gradient-text">{usuario?.nombre}</span>
+        </h1>
+        <p style={{ color: 'var(--text-muted)' }}>{estadoServidor}</p>
       </motion.div>
 
       {tieneAccesoAlPanel ? (

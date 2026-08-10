@@ -140,20 +140,22 @@ export default function TabClientes() {
         <h3 style={{ marginBottom: '1rem' }}>Clientes ({clientes.length})</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {clientes.map((cliente) => (
-            <div key={cliente.id} style={filaStyles}>
+            <div key={cliente.id} className="admin-fila" style={filaStyles}>
               {cliente.logoUrl ? (
                 <img src={`${API_URL}${cliente.logoUrl}`} alt={cliente.nombreEmpresa} style={miniaturaStyles} />
               ) : (
                 <div style={{ ...miniaturaStyles, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)' }}>🏢</div>
               )}
-              <div style={{ flex: 1 }}>
+              <div className="admin-fila-info">
                 <strong>{cliente.nombreEmpresa}</strong>
                 {cliente.websiteUrl && (
                   <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{cliente.websiteUrl}</p>
                 )}
               </div>
-              <button type="button" onClick={() => iniciarEdicion(cliente)} style={secondaryBtnStyles}>Editar</button>
-              <button type="button" onClick={() => eliminarCliente(cliente.id)} style={dangerBtnStyles}>Eliminar</button>
+              <div className="admin-fila-acciones">
+                <button type="button" onClick={() => iniciarEdicion(cliente)} style={secondaryBtnStyles}>Editar</button>
+                <button type="button" onClick={() => eliminarCliente(cliente.id)} style={dangerBtnStyles}>Eliminar</button>
+              </div>
             </div>
           ))}
           {clientes.length === 0 && <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Sin clientes registrados.</span>}
@@ -163,5 +165,5 @@ export default function TabClientes() {
   );
 }
 
-const filaStyles = { display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.6rem', padding: '0.75rem 1rem' };
+const filaStyles = { background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.6rem', padding: '0.75rem 1rem' };
 const miniaturaStyles = { width: '44px', height: '44px', borderRadius: '0.5rem', objectFit: 'cover', flexShrink: 0 };

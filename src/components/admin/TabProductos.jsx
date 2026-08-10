@@ -225,18 +225,20 @@ export default function TabProductos() {
         <h3 style={{ marginBottom: '1rem' }}>Productos ({productos.length})</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {productos.map((producto) => (
-            <div key={producto.id} style={filaProductoStyles}>
+            <div key={producto.id} className="admin-fila" style={filaProductoStyles}>
               {producto.imagenUrl ? (
                 <img src={`${API_URL}${producto.imagenUrl}`} alt={producto.nombre} style={miniaturaStyles} />
               ) : (
                 <div style={{ ...miniaturaStyles, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)' }}>🛠️</div>
               )}
-              <div style={{ flex: 1 }}>
+              <div className="admin-fila-info">
                 <strong>{producto.nombre}</strong>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{producto.categoria?.nombre}</p>
               </div>
-              <button type="button" onClick={() => iniciarEdicion(producto)} style={secondaryBtnStyles}>Editar</button>
-              <button type="button" onClick={() => eliminarProducto(producto.id)} style={dangerBtnStyles}>Eliminar</button>
+              <div className="admin-fila-acciones">
+                <button type="button" onClick={() => iniciarEdicion(producto)} style={secondaryBtnStyles}>Editar</button>
+                <button type="button" onClick={() => eliminarProducto(producto.id)} style={dangerBtnStyles}>Eliminar</button>
+              </div>
             </div>
           ))}
           {productos.length === 0 && <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>Sin productos.</span>}
@@ -248,5 +250,5 @@ export default function TabProductos() {
 
 const chipStyles = { display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(132,189,0,0.12)', border: '0.5px solid rgba(132,189,0,0.3)', color: 'var(--brand-green)', borderRadius: '999px', padding: '0.3rem 0.4rem 0.3rem 0.9rem', fontSize: '0.8rem' };
 const chipCerrarStyles = { background: 'transparent', border: 'none', color: 'var(--brand-green)', cursor: 'pointer', fontSize: '0.75rem', padding: '0.2rem 0.4rem' };
-const filaProductoStyles = { display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.6rem', padding: '0.75rem 1rem' };
+const filaProductoStyles = { background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.6rem', padding: '0.75rem 1rem' };
 const miniaturaStyles = { width: '44px', height: '44px', borderRadius: '0.5rem', objectFit: 'cover', flexShrink: 0 };
