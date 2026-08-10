@@ -1,4 +1,7 @@
-export const API_URL = 'http://localhost:3001';
+// En producción, Express sirve el frontend y la API desde el mismo dominio (Render),
+// así que las rutas deben ser relativas. En desarrollo, Vite corre en otro puerto,
+// por lo que seguimos apuntando explícitamente al servidor Express local.
+export const API_URL = import.meta.env.PROD ? '' : 'http://localhost:3001';
 
 // Decodifica el payload de un JWT sin verificar la firma
 // (la verificación real de la firma la hace siempre el backend).
