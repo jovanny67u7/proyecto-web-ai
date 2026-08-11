@@ -64,4 +64,42 @@ router.patch('/:id/activo', verificarToken, autorizarRoles('ADMIN'), async (req,
   }
 });
 
+// ADMIN: cambia el rol de un usuario (ADMIN / EDITOR / USER). El modelo de
+// datos soporta varios roles por usuario, pero la app trata el rol como
+// exclusivo (Dashboard.jsx solo mira "¿es ADMIN? si no, ¿es EDITOR?"), así
+// que aquí reemplazamos el set completo de roles por uno solo, en vez de
+// simplemente agregar uno más.
+router.patch('/:id/rol', verificarToken, autorizarRoles('ADMIN'), async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const { rol } = req.body;
+    const ROLES_VALIDOS = ['ADMIN', 'EDITOR', 'USER'];
+
+    if (!ROLES_VALIDOS.includes(rol)) {
+      return res.status(400).json({ error: 'El rol debe ser ADMIN, EDITOR o USER.' });
+    }
+    if (id === req.usuario.id) {
+      return res.status(400).json({ error: 'No puedes cambiar tu propio rol.' });
+    }
+
+    const rolNuevo = await prisma.rol.findUnique({ where: { nombre: rol } });
+    if (!rolNuevo) {
+      return res.status(500).json({ error: `El rol "${rol}" no existe. Ejecuta el seed de roles.` });
+    }
+
+    await prisma.usuarioRol.deleteMany({ where: { usuarioId: id } });
+    await prisma.usuarioRol.create({ data: { usuarioId: id, rolId: rolNuevo.id } });
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { id },
+      select: { id: true, nombre: true, email: true, roles: { select: { rol: { select: { nombre: true } } } } },
+    });
+
+    return res.json({ ...usuario, roles: usuario.roles.map((ur) => ur.rol.nombre) });
+  } catch (error) {
+    console.error('Error en PATCH /api/usuarios/:id/rol:', error);
+    return res.status(500).json({ error: 'Error al actualizar el rol del usuario.' });
+  }
+});
+
 module.exports = router;

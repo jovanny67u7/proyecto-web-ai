@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../../utils/apiFetch';
-import { cardStyles, errorStyles, tableStyles, thStyles, tdStyles, secondaryBtnStyles, dangerBtnStyles } from './adminStyles';
+import { obtenerUsuario } from '../../utils/authApi';
+import { cardStyles, errorStyles, inputStyles, tableStyles, thStyles, tdStyles, secondaryBtnStyles, dangerBtnStyles } from './adminStyles';
+
+const ROLES_DISPONIBLES = ['ADMIN', 'EDITOR', 'USER'];
 
 export default function TabUsuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const [error, setError] = useState('');
   const [cargando, setCargando] = useState(true);
   const [actualizandoId, setActualizandoId] = useState(null);
+  const usuarioActual = obtenerUsuario();
 
   useEffect(() => {
     apiFetch('/api/usuarios')
@@ -24,6 +28,22 @@ export default function TabUsuarios() {
         body: { activo: !usuario.activo },
       });
       setUsuarios((prev) => prev.map((u) => (u.id === usuario.id ? { ...u, activo: actualizado.activo } : u)));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setActualizandoId(null);
+    }
+  };
+
+  const cambiarRol = async (usuario, nuevoRol) => {
+    setError('');
+    setActualizandoId(usuario.id);
+    try {
+      const actualizado = await apiFetch(`/api/usuarios/${usuario.id}/rol`, {
+        method: 'PATCH',
+        body: { rol: nuevoRol },
+      });
+      setUsuarios((prev) => prev.map((u) => (u.id === usuario.id ? { ...u, roles: actualizado.roles } : u)));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,7 +75,22 @@ export default function TabUsuarios() {
               <tr key={u.id}>
                 <td style={tdStyles}>{u.nombre}</td>
                 <td style={tdStyles}>{u.email}</td>
-                <td style={tdStyles}>{u.roles.join(', ')}</td>
+                <td style={tdStyles}>
+                  {u.id === usuarioActual?.id ? (
+                    u.roles.join(', ')
+                  ) : (
+                    <select
+                      value={u.roles[0] || 'USER'}
+                      onChange={(e) => cambiarRol(u, e.target.value)}
+                      disabled={actualizandoId === u.id}
+                      style={rolSelectStyles}
+                    >
+                      {ROLES_DISPONIBLES.map((rol) => (
+                        <option key={rol} value={rol}>{rol}</option>
+                      ))}
+                    </select>
+                  )}
+                </td>
                 <td style={tdStyles}>
                   <span style={u.activo ? estadoActivoStyles : estadoInactivoStyles}>
                     <span style={{ ...puntoEstadoStyles, background: u.activo ? 'var(--brand-green)' : '#ff6b6b' }} />
@@ -82,6 +117,7 @@ export default function TabUsuarios() {
   );
 }
 
+const rolSelectStyles = { ...inputStyles, width: 'auto', padding: '0.4rem 0.6rem', fontSize: '0.8rem' };
 const estadoBaseStyles = {
   display: 'inline-flex',
   alignItems: 'center',
