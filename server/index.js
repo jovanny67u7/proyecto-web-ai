@@ -20,6 +20,18 @@ const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
 const PORT = process.env.PORT || 3001;
 
+// Sin esta variable, jwt.sign()/jwt.verify() lanzan una excepción en cada
+// login y en cada petición autenticada. Lo avisamos fuerte y claro al
+// arrancar para que el error aparezca en los logs de Render de inmediato,
+// en vez de tener que deducirlo desde un 500 genérico en el navegador.
+if (!JWT_SECRET) {
+  console.error(
+    '⚠️  FATAL: la variable de entorno JWT_SECRET no está definida. ' +
+    'El login y todas las rutas protegidas fallarán hasta que la configures ' +
+    '(Render → tu servicio → Environment → JWT_SECRET).'
+  );
+}
+
 app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -57,6 +69,7 @@ app.post('/api/auth/registro', async (req, res) => {
         nombre,
         email,
         password: passwordHash,
+        activo: true, // explícito: toda cuenta nueva nace habilitada.
         roles: {
           create: [{ rolId: rolUsuario.id }],
         },
@@ -103,11 +116,19 @@ app.post('/api/auth/login', async (req, res) => {
 
     const roles = usuario.roles.map((ur) => ur.rol.nombre);
 
-    const token = jwt.sign(
-      { id: usuario.id, nombre: usuario.nombre, email: usuario.email, roles },
-      JWT_SECRET,
-      { expiresIn: '2h' }
-    );
+    let token;
+    try {
+      token = jwt.sign(
+        { id: usuario.id, nombre: usuario.nombre, email: usuario.email, roles },
+        JWT_SECRET,
+        { expiresIn: '2h' }
+      );
+    } catch (jwtError) {
+      // Aislado del resto de la lógica: si esto falla, casi siempre es porque
+      // JWT_SECRET no está configurado en el entorno (ver aviso al arrancar).
+      console.error('Error al firmar el JWT en /api/auth/login (revisa JWT_SECRET):', jwtError);
+      return res.status(500).json({ error: 'Error interno al generar la sesión. Contacta al administrador.' });
+    }
 
     return res.json({
       mensaje: 'Inicio de sesión exitoso.',

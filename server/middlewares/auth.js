@@ -35,6 +35,9 @@ async function verificarToken(req, res, next) {
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({ error: 'La sesión ha expirado. Inicia sesión nuevamente.' });
     }
+    // No lo silenciamos: si JWT_SECRET falta o cambió, todo token válido
+    // empieza a fallar aquí y sin este log no queda ningún rastro en Render.
+    console.error('Error al verificar el JWT (revisa JWT_SECRET):', err);
     return res.status(401).json({ error: 'Token inválido.' });
   }
 }
