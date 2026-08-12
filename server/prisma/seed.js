@@ -116,17 +116,33 @@ async function seedCatalogo() {
   console.log('Categorías y productos de catálogo sembrados.');
 }
 
+// Clientes de confianza reales y permanentes. Los logos viven en
+// server/uploads/ (committeados a git, a diferencia de los que se suben en
+// vivo desde el panel — Render no persiste el disco entre deploys, así que
+// cualquier logo subido por un admin en producción se pierde en el próximo
+// deploy; estos 3 sobreviven porque están en el repo). El admin puede seguir
+// agregando más clientes de prueba desde el panel con total normalidad.
 async function seedClientes() {
-  const clientes = ['Cliente 1', 'Cliente 2', 'Cliente 3', 'Cliente 4'];
-  for (const nombreEmpresa of clientes) {
-    const existente = await prisma.clienteConfianza.findFirst({ where: { nombreEmpresa } });
-    if (!existente) {
-      await prisma.clienteConfianza.create({
-        data: { nombreEmpresa, logoUrl: null, websiteUrl: null },
-      });
+  // Limpia los clientes de ejemplo genéricos que se sembraban antes.
+  await prisma.clienteConfianza.deleteMany({
+    where: { nombreEmpresa: { in: ['Cliente 1', 'Cliente 2', 'Cliente 3', 'Cliente 4'] } },
+  });
+
+  const clientesReales = [
+    { nombreEmpresa: 'Entrevalles', logoUrl: '/uploads/entrevalles.png', websiteUrl: 'https://entrevalles.mx/' },
+    { nombreEmpresa: 'Nowus', logoUrl: '/uploads/nowus.png', websiteUrl: 'https://nowus.com.mx/' },
+    { nombreEmpresa: 'Cadlev', logoUrl: '/uploads/cadlev.png', websiteUrl: 'https://cadlev.com/' },
+  ];
+
+  for (const cliente of clientesReales) {
+    const existente = await prisma.clienteConfianza.findFirst({ where: { nombreEmpresa: cliente.nombreEmpresa } });
+    if (existente) {
+      await prisma.clienteConfianza.update({ where: { id: existente.id }, data: cliente });
+    } else {
+      await prisma.clienteConfianza.create({ data: cliente });
     }
   }
-  console.log('Clientes de confianza de ejemplo sembrados.');
+  console.log('Clientes de confianza reales sembrados: Entrevalles, Nowus, Cadlev.');
 }
 
 async function main() {

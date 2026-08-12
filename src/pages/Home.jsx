@@ -10,17 +10,14 @@ const MAPA_SRC = `https://www.google.com/maps?q=${encodeURIComponent(DIRECCION_O
 
 const SERVICIOS = [
   {
-    icono: '🤖',
     titulo: 'Chatbots IA',
     descripcion: 'Asistentes conversacionales entrenados con tu negocio, disponibles 24/7 en WhatsApp, tu sitio web y redes sociales.',
   },
   {
-    icono: '📊',
     titulo: 'CRM Inteligente',
     descripcion: 'Gestiona prospectos y clientes con seguimiento automático impulsado por IA y reportes en tiempo real.',
   },
   {
-    icono: '⚡',
     titulo: 'Automatizaciones',
     descripcion: 'Elimina tareas repetitivas conectando tus herramientas favoritas, sin escribir una sola línea de código.',
   },
@@ -45,7 +42,7 @@ const PREGUNTAS_DEMO = [
   },
 ];
 
-function TarjetaServicio({ icono, titulo, descripcion }) {
+function TarjetaServicio({ titulo, descripcion }) {
   const manejarMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -56,7 +53,6 @@ function TarjetaServicio({ icono, titulo, descripcion }) {
 
   return (
     <motion.div className="glow-card" variants={itemVariants} onMouseMove={manejarMouseMove}>
-      <div style={servicioIconoStyles}>{icono}</div>
       <h3 style={servicioTituloStyles}>{titulo}</h3>
       <p style={servicioTextoStyles}>{descripcion}</p>
     </motion.div>
@@ -298,17 +294,6 @@ const h1Styles = { fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 900, lineHe
 // --- ESTILOS: SERVICIOS (tarjetas glow) ---
 const serviciosSectionStyles = { padding: '5rem 2rem' };
 const serviciosTituloStyles = { fontSize: 'clamp(1.9rem, 4.5vw, 2.6rem)', fontWeight: 700, marginBottom: '1rem', lineHeight: 1.25 };
-const servicioIconoStyles = {
-  width: '56px',
-  height: '56px',
-  borderRadius: '1rem',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontSize: '1.6rem',
-  background: 'rgba(132, 189, 0, 0.1)',
-  marginBottom: '1.5rem',
-};
 const servicioTituloStyles = { fontSize: '1.25rem', marginBottom: '0.75rem' };
 const servicioTextoStyles = { fontFamily: "'Roboto', sans-serif", fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-muted)' };
 

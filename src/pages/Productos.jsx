@@ -5,12 +5,6 @@ import { API_URL } from '../utils/authApi';
 import { contenedorVariants, itemVariants } from '../utils/motionVariants';
 import QuoteModal from '../components/QuoteModal';
 
-const ICONOS_POR_CATEGORIA = {
-  'Chatbots IA': '🤖',
-  'CRM Inteligente': '📊',
-  Automatizaciones: '⚡',
-};
-
 const ProductCard = ({ producto, onCotizar }) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardDynamicStyle = {
@@ -20,7 +14,9 @@ const ProductCard = ({ producto, onCotizar }) => {
     boxShadow: isHovered ? '0 20px 50px rgba(132, 189, 0, 0.35)' : 'none',
   };
 
-  const icono = ICONOS_POR_CATEGORIA[producto.categoria?.nombre] || '🛠️';
+  // Monograma con la inicial del producto: fallback limpio mientras no se
+  // suba una imagen real desde el panel de administración.
+  const inicial = producto.nombre?.charAt(0)?.toUpperCase() || '?';
 
   return (
     <motion.article
@@ -54,7 +50,7 @@ const ProductCard = ({ producto, onCotizar }) => {
         {producto.imagenUrl ? (
           <img src={`${API_URL}${producto.imagenUrl}`} alt={producto.nombre} style={imagenStyle} />
         ) : (
-          <div style={iconWrapStyle}>{icono}</div>
+          <div style={iconWrapStyle}>{inicial}</div>
         )}
         <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{producto.nombre}</h3>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>{producto.descripcion}</p>
@@ -135,7 +131,20 @@ const gridStyle = { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minm
 const productCardStyle = { background: 'rgba(255,255,255,0.03)', border: '0.5px solid var(--border)', borderRadius: '1.8rem', padding: '0.18rem', transition: 'all 0.3s ease' };
 const cardInnerStyle = { background: 'var(--surface-2)', borderRadius: 'calc(1.8rem - 3px)', padding: '2rem', height: '100%' };
 const badgeStyle = { display: 'inline-block', background: 'rgba(132, 189, 0, 0.15)', color: 'var(--brand-green)', border: '0.5px solid rgba(132, 189, 0, 0.3)', borderRadius: '999px', padding: '0.25rem 0.75rem', fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '1.5rem' };
-const iconWrapStyle = { width: '52px', height: '52px', borderRadius: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', marginBottom: '1.25rem', background: 'rgba(255,255,255,0.05)' };
+const iconWrapStyle = {
+  width: '52px',
+  height: '52px',
+  borderRadius: '1rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '1.3rem',
+  fontWeight: 700,
+  fontFamily: "'Poppins', sans-serif",
+  color: 'var(--brand-green)',
+  marginBottom: '1.25rem',
+  background: 'rgba(132, 189, 0, 0.1)',
+};
 const imagenStyle = { width: '52px', height: '52px', borderRadius: '1rem', objectFit: 'cover', marginBottom: '1.25rem' };
 const tooltipStyle = {
   position: 'absolute',

@@ -105,6 +105,9 @@ body::before {
 /* --- FAQ ACCORDION (Nosotros) --- */
 .faq-pregunta:hover { color: var(--brand-green); }
 
+/* --- BOTÓN FLOTANTE DE WHATSAPP --- */
+.boton-whatsapp:hover { transform: scale(1.08); }
+
 /* --- SECCIÓN DE SERVICIOS (Home) --- */
 .servicios-grid {
   display: grid;

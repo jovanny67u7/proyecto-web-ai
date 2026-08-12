@@ -229,7 +229,7 @@ export default function TabProductos() {
               {producto.imagenUrl ? (
                 <img src={`${API_URL}${producto.imagenUrl}`} alt={producto.nombre} style={miniaturaStyles} />
               ) : (
-                <div style={{ ...miniaturaStyles, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)' }}>🛠️</div>
+                <div style={monogramaStyles}>{producto.nombre?.charAt(0)?.toUpperCase() || '?'}</div>
               )}
               <div className="admin-fila-info">
                 <strong>{producto.nombre}</strong>
@@ -252,3 +252,4 @@ const chipStyles = { display: 'inline-flex', alignItems: 'center', gap: '0.5rem'
 const chipCerrarStyles = { background: 'transparent', border: 'none', color: 'var(--brand-green)', cursor: 'pointer', fontSize: '0.75rem', padding: '0.2rem 0.4rem' };
 const filaProductoStyles = { background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.6rem', padding: '0.75rem 1rem' };
 const miniaturaStyles = { width: '44px', height: '44px', borderRadius: '0.5rem', objectFit: 'cover', flexShrink: 0 };
+const monogramaStyles = { ...miniaturaStyles, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(132, 189, 0, 0.1)', color: 'var(--brand-green)', fontFamily: "'Poppins', sans-serif", fontWeight: 700 };

@@ -16,8 +16,14 @@ export default function Clientes() {
   }, []);
 
   const ClienteItem = ({ cliente }) => {
+    // Los logos reales vienen diseñados para fondo claro (texto en negro/azul
+    // marino); sobre el fondo oscuro del sitio se volvían casi invisibles.
+    // La tarjeta blanca es el patrón estándar para "muros de logos" en sitios
+    // con tema oscuro: conserva el logo tal cual lo entregó cada empresa.
     const contenido = cliente.logoUrl ? (
-      <img src={`${API_URL}${cliente.logoUrl}`} alt={cliente.nombreEmpresa} style={logoImgStyle} />
+      <div style={logoCardStyle}>
+        <img src={`${API_URL}${cliente.logoUrl}`} alt={cliente.nombreEmpresa} style={logoImgStyle} />
+      </div>
     ) : (
       <h3 style={clientLogoStyle}>{cliente.nombreEmpresa}</h3>
     );
@@ -49,7 +55,7 @@ export default function Clientes() {
       )}
 
       <motion.div
-        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', opacity: 0.6 }}
+        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1.5rem' }}
         variants={itemVariants}
       >
         {clientes.map((cliente) => (
@@ -61,4 +67,12 @@ export default function Clientes() {
 }
 
 const clientLogoStyle = { fontSize: '1.5rem', fontWeight: 900, fontFamily: 'Poppins, sans-serif' };
-const logoImgStyle = { height: '48px', maxWidth: '160px', objectFit: 'contain' };
+const logoCardStyle = {
+  background: '#ffffff',
+  borderRadius: '1rem',
+  padding: '1.25rem 2rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+const logoImgStyle = { height: '40px', maxWidth: '160px', objectFit: 'contain', display: 'block' };

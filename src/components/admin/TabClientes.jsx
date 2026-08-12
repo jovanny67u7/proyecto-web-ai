@@ -144,7 +144,7 @@ export default function TabClientes() {
               {cliente.logoUrl ? (
                 <img src={`${API_URL}${cliente.logoUrl}`} alt={cliente.nombreEmpresa} style={miniaturaStyles} />
               ) : (
-                <div style={{ ...miniaturaStyles, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface)' }}>🏢</div>
+                <div style={monogramaStyles}>{cliente.nombreEmpresa?.charAt(0)?.toUpperCase() || '?'}</div>
               )}
               <div className="admin-fila-info">
                 <strong>{cliente.nombreEmpresa}</strong>
@@ -167,3 +167,4 @@ export default function TabClientes() {
 
 const filaStyles = { background: 'var(--surface-2)', border: '0.5px solid var(--border)', borderRadius: '0.6rem', padding: '0.75rem 1rem' };
 const miniaturaStyles = { width: '44px', height: '44px', borderRadius: '0.5rem', objectFit: 'cover', flexShrink: 0 };
+const monogramaStyles = { ...miniaturaStyles, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(132, 189, 0, 0.1)', color: 'var(--brand-green)', fontFamily: "'Poppins', sans-serif", fontWeight: 700 };
