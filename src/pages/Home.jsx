@@ -1,102 +1,116 @@
-import React, { useMemo } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { contenedorVariants, itemVariants } from '../utils/motionVariants';
 import BannerEstacional from '../components/BannerEstacional';
-
-import fondoAI from '../../img/FONDO-AI.png';
-import chatbotImg from '../../img/CHATBOT-DESCRIPTION.png';
-import automatizacionImg from '../../img/AUTOMATIZACION-DESCRIPTION.png';
+import ParticulasCanvas from '../components/ParticulasCanvas';
 
 const DIRECCION_OFICINA = 'Circuito Puerta del Sol, Villa la Cañada 15A-Int. G4, Puerta Real Residencial Desarrollo Urbana 08, 76910 Santiago de Querétaro, Qro.';
 const MAPA_SRC = `https://www.google.com/maps?q=${encodeURIComponent(DIRECCION_OFICINA)}&output=embed`;
 
-// Genera la configuración aleatoria (una sola vez) de las partículas del Hero
-function generarParticulas(cantidad) {
-  return Array.from({ length: cantidad }, (_, i) => {
-    const esLinea = i % 3 === 0;
-    return {
-      id: i,
-      tipo: esLinea ? 'linea' : 'punto',
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      tamano: esLinea ? 18 + Math.random() * 34 : 2 + Math.random() * 4,
-      rotacion: Math.random() * 360,
-      distancia: 15 + Math.random() * 25,
-      duracion: 7 + Math.random() * 10,
-      retraso: Math.random() * 6,
-      opacidadBase: 0.15 + Math.random() * 0.35,
-    };
-  });
-}
+const SERVICIOS = [
+  {
+    icono: '🤖',
+    titulo: 'Chatbots IA',
+    descripcion: 'Asistentes conversacionales entrenados con tu negocio, disponibles 24/7 en WhatsApp, tu sitio web y redes sociales.',
+  },
+  {
+    icono: '📊',
+    titulo: 'CRM Inteligente',
+    descripcion: 'Gestiona prospectos y clientes con seguimiento automático impulsado por IA y reportes en tiempo real.',
+  },
+  {
+    icono: '⚡',
+    titulo: 'Automatizaciones',
+    descripcion: 'Elimina tareas repetitivas conectando tus herramientas favoritas, sin escribir una sola línea de código.',
+  },
+];
 
-function HeroParticulas() {
-  const particulas = useMemo(() => generarParticulas(22), []);
+const CHAT_INICIAL = [
+  { autor: 'bot', texto: '¡Hola! 👋 Soy el asistente de AsíDeSimple AI. ¿En qué puedo ayudarte hoy?' },
+];
+
+const PREGUNTAS_DEMO = [
+  {
+    pregunta: '¿Qué puede hacer un chatbot de IA?',
+    respuesta: 'Responder dudas de tus clientes al instante, agendar citas, enviar catálogos y calificar leads — todo sin que tu equipo tenga que estar conectado 24/7.',
+  },
+  {
+    pregunta: '¿Cuánto tarda la implementación?',
+    respuesta: 'Un chatbot estándar puede estar funcionando en cuestión de días. Todo depende de los módulos que elijas para tu negocio.',
+  },
+  {
+    pregunta: 'Quiero una cotización',
+    respuesta: '¡Perfecto! Ve al catálogo, elige el producto que te interese y selecciona los módulos — te generamos un mensaje directo a nuestro WhatsApp con todo listo.',
+  },
+];
+
+function TarjetaServicio({ icono, titulo, descripcion }) {
+  const manejarMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    e.currentTarget.style.setProperty('--mx', `${x}%`);
+    e.currentTarget.style.setProperty('--my', `${y}%`);
+  };
 
   return (
-    <div style={particulasContenedorStyles} aria-hidden="true">
-      {particulas.map((p) => (
-        <motion.div
-          key={p.id}
-          style={
-            p.tipo === 'linea'
-              ? {
-                  position: 'absolute',
-                  left: `${p.left}%`,
-                  top: `${p.top}%`,
-                  width: '1.5px',
-                  height: `${p.tamano}px`,
-                  background: 'var(--brand-green)',
-                  transform: `rotate(${p.rotacion}deg)`,
-                }
-              : {
-                  position: 'absolute',
-                  left: `${p.left}%`,
-                  top: `${p.top}%`,
-                  width: `${p.tamano}px`,
-                  height: `${p.tamano}px`,
-                  borderRadius: '50%',
-                  background: 'var(--brand-green)',
-                }
-          }
-          animate={{
-            y: [0, -p.distancia, 0],
-            opacity: [p.opacidadBase * 0.4, p.opacidadBase, p.opacidadBase * 0.4],
-          }}
-          transition={{
-            duration: p.duracion,
-            delay: p.retraso,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-    </div>
+    <motion.div className="glow-card" variants={itemVariants} onMouseMove={manejarMouseMove}>
+      <div style={servicioIconoStyles}>{icono}</div>
+      <h3 style={servicioTituloStyles}>{titulo}</h3>
+      <p style={servicioTextoStyles}>{descripcion}</p>
+    </motion.div>
   );
 }
 
-// Anillo decorativo que rota lentamente detrás de las imágenes de servicios
-function AnilloDecorativo({ tamano = 320, color = 'var(--brand-green)', duracion = 26, inverso = false, opacidad = 0.25, punteado = true }) {
+function DemoChat() {
+  const [mensajes, setMensajes] = useState(CHAT_INICIAL);
+  const [usadas, setUsadas] = useState([]);
+  const pendientes = PREGUNTAS_DEMO.filter((p) => !usadas.includes(p.pregunta));
+
+  const elegirPregunta = (item) => {
+    setMensajes((prev) => [...prev, { autor: 'user', texto: item.pregunta }]);
+    setUsadas((prev) => [...prev, item.pregunta]);
+    setTimeout(() => {
+      setMensajes((prev) => [...prev, { autor: 'bot', texto: item.respuesta }]);
+    }, 500);
+  };
+
+  const reiniciar = () => {
+    setMensajes(CHAT_INICIAL);
+    setUsadas([]);
+  };
+
   return (
-    <motion.div
-      aria-hidden="true"
-      style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        width: tamano,
-        height: tamano,
-        marginTop: -(tamano / 2),
-        marginLeft: -(tamano / 2),
-        borderRadius: '50%',
-        border: `1.5px ${punteado ? 'dashed' : 'solid'} ${color}`,
-        opacity: opacidad,
-        zIndex: 0,
-        pointerEvents: 'none',
-      }}
-      animate={{ rotate: inverso ? -360 : 360 }}
-      transition={{ duration: duracion, repeat: Infinity, ease: 'linear' }}
-    />
+    <div style={demoCardStyles}>
+      <div style={demoHeaderStyles}>
+        <div style={demoAvatarStyles}>AI</div>
+        <div>
+          <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Asistente AsíDeSimple</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--brand-green)', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <span className="eyebrow-dot"></span> En línea (demo)
+          </div>
+        </div>
+      </div>
+
+      <div style={demoMensajesStyles}>
+        {mensajes.map((m, i) => (
+          <div key={i} style={m.autor === 'bot' ? demoBotMsgStyles : demoUserMsgStyles}>{m.texto}</div>
+        ))}
+      </div>
+
+      <div style={demoSugerenciasStyles}>
+        {pendientes.length > 0 ? (
+          pendientes.map((item) => (
+            <button key={item.pregunta} type="button" onClick={() => elegirPregunta(item)} style={demoSugerenciaBtnStyles}>
+              {item.pregunta}
+            </button>
+          ))
+        ) : (
+          <button type="button" onClick={reiniciar} style={demoSugerenciaBtnStyles}>🔄 Reiniciar demo</button>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -106,11 +120,10 @@ export default function Home() {
       {/* BANNER ESTACIONAL — justo debajo del menú de navegación fijo */}
       <BannerEstacional />
 
-      {/* HERO — fondo con imagen, overlay oscuro y partículas animadas */}
+      {/* HERO — fondo oscuro sólido + partículas tipo constelación (canvas) */}
       <section style={heroWrapperStyles}>
-        <div style={{ ...heroBgStyles, backgroundImage: `url(${fondoAI})` }} />
-        <div style={heroOverlayStyles} />
-        <HeroParticulas />
+        <div style={heroBgStyles} />
+        <ParticulasCanvas />
 
         <motion.div
           style={heroContentStyles}
@@ -139,69 +152,53 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* SECCIÓN DE SERVICIOS — layout en Z, alternado y responsivo */}
-      <section className="container" style={zpatternSectionStyles}>
-        <motion.article
-          className="zpattern-row"
+      {/* SERVICIOS — tarjetas oscuras con borde que se ilumina siguiendo el cursor */}
+      <section className="container" style={serviciosSectionStyles}>
+        <motion.div
           variants={contenedorVariants}
           initial="oculto"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
+          style={{ textAlign: 'center' }}
         >
-          <motion.div variants={itemVariants}>
-            <div className="eyebrow">
-              <span className="eyebrow-dot"></span> Chatbots Inteligentes
-            </div>
-            <h2 style={zpatternTitleStyles}>
-              Conversaciones que <span className="gradient-text">venden solas</span>
-            </h2>
-            <p style={zpatternTextStyles}>
-              Diseñamos chatbots entrenados con IA que responden a tus clientes al instante, los 24/7,
-              en WhatsApp, tu sitio web o redes sociales. Cada conversación se convierte en una
-              oportunidad de venta, sin que tu equipo tenga que estar detrás de una pantalla todo el día.
-            </p>
-            <Link to="/productos" className="btn-secondary" style={{ textDecoration: 'none', marginTop: '1.5rem', display: 'inline-flex' }}>
-              Conoce más ↗
-            </Link>
+          <motion.div className="eyebrow" style={{ margin: '0 auto 1rem' }} variants={itemVariants}>
+            <span className="eyebrow-dot"></span> Servicios
           </motion.div>
+          <motion.h2 style={serviciosTituloStyles} variants={itemVariants}>
+            Chatbots, CRM y Automatización <span className="gradient-text">en un solo lugar</span>
+          </motion.h2>
 
-          <motion.div style={zpatternImgWrapperStyles} variants={itemVariants}>
-            <AnilloDecorativo tamano={340} color="var(--brand-green)" duracion={32} />
-            <AnilloDecorativo tamano={250} color="#ffffff" duracion={22} inverso opacidad={0.12} />
-            <img src={chatbotImg} alt="Chatbot inteligente asídesimple AI" style={zpatternImgStyles} />
+          <motion.div className="servicios-grid" variants={itemVariants}>
+            {SERVICIOS.map((servicio) => (
+              <TarjetaServicio key={servicio.titulo} {...servicio} />
+            ))}
           </motion.div>
-        </motion.article>
+        </motion.div>
+      </section>
 
-        <motion.article
-          className="zpattern-row"
+      {/* DEMO — chat estático/maquetado, sin conexión a backend */}
+      <section className="container" style={demoSectionStyles}>
+        <motion.div
           variants={contenedorVariants}
           initial="oculto"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
+          style={{ textAlign: 'center' }}
         >
-          <motion.div style={zpatternImgWrapperStyles} variants={itemVariants}>
-            <AnilloDecorativo tamano={340} color="var(--brand-blue)" duracion={28} inverso />
-            <AnilloDecorativo tamano={250} color="var(--brand-green)" duracion={20} opacidad={0.15} />
-            <img src={automatizacionImg} alt="Automatización de procesos asídesimple AI" style={zpatternImgStyles} />
+          <motion.div className="eyebrow" style={{ margin: '0 auto 1rem' }} variants={itemVariants}>
+            <span className="eyebrow-dot"></span> Pruébalo tú mismo
           </motion.div>
+          <motion.h2 style={serviciosTituloStyles} variants={itemVariants}>
+            Experimenta Nuestra IA <span className="gradient-text">Ahora</span>
+          </motion.h2>
+          <motion.p style={demoSubtituloStyles} variants={itemVariants}>
+            Así se siente conversar con tu propio asistente. Elige una pregunta y mira cómo responde.
+          </motion.p>
 
           <motion.div variants={itemVariants}>
-            <div className="eyebrow">
-              <span className="eyebrow-dot"></span> Automatizaciones
-            </div>
-            <h2 style={zpatternTitleStyles}>
-              Elimina el <span className="gradient-text">trabajo repetitivo</span>
-            </h2>
-            <p style={zpatternTextStyles}>
-              Conectamos tus herramientas y automatizamos los procesos manuales que le roban tiempo a tu
-              equipo: seguimiento de clientes, reportes, cotizaciones y más. Menos errores, más horas
-              para lo que realmente importa: hacer crecer tu negocio.
-            </p>
-            <Link to="/productos" className="btn-secondary" style={{ textDecoration: 'none', marginTop: '1.5rem', display: 'inline-flex' }}>
-              Conoce más ↗
-            </Link>
+            <DemoChat />
           </motion.div>
-        </motion.article>
+        </motion.div>
       </section>
 
       {/* CONTACTO */}
@@ -286,50 +283,70 @@ const heroWrapperStyles = {
 const heroBgStyles = {
   position: 'absolute',
   inset: 0,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
+  background: 'var(--brand-dark)',
   zIndex: 0,
-};
-const heroOverlayStyles = {
-  position: 'absolute',
-  inset: 0,
-  background: 'rgba(0,0,0,0.7)',
-  zIndex: 1,
-};
-const particulasContenedorStyles = {
-  position: 'absolute',
-  inset: 0,
-  zIndex: 2,
-  overflow: 'hidden',
-  pointerEvents: 'none',
 };
 const heroContentStyles = {
   position: 'relative',
-  zIndex: 3,
+  zIndex: 2,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
 };
 const h1Styles = { fontSize: 'clamp(2.5rem, 8vw, 4rem)', fontWeight: 900, lineHeight: 1.1, marginBottom: '1rem' };
 
-// --- ESTILOS: SECCIÓN Z-PATTERN ---
-const zpatternSectionStyles = { padding: '2rem 2rem 0' };
-const zpatternTitleStyles = { fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', fontWeight: 700, margin: '1rem 0 1.2rem', lineHeight: 1.2 };
-const zpatternTextStyles = { fontFamily: "'Roboto', sans-serif", fontSize: '1rem', lineHeight: 1.8, color: 'var(--text-muted)' };
-const zpatternImgWrapperStyles = { position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '320px' };
-const zpatternImgStyles = {
-  position: 'relative',
-  zIndex: 1,
+// --- ESTILOS: SERVICIOS (tarjetas glow) ---
+const serviciosSectionStyles = { padding: '5rem 2rem' };
+const serviciosTituloStyles = { fontSize: 'clamp(1.9rem, 4.5vw, 2.6rem)', fontWeight: 700, marginBottom: '1rem', lineHeight: 1.25 };
+const servicioIconoStyles = {
+  width: '56px',
+  height: '56px',
+  borderRadius: '1rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontSize: '1.6rem',
+  background: 'rgba(132, 189, 0, 0.1)',
+  marginBottom: '1.5rem',
+};
+const servicioTituloStyles = { fontSize: '1.25rem', marginBottom: '0.75rem' };
+const servicioTextoStyles = { fontFamily: "'Roboto', sans-serif", fontSize: '0.9rem', lineHeight: 1.7, color: 'var(--text-muted)' };
+
+// --- ESTILOS: DEMO DE CHAT ---
+const demoSectionStyles = { padding: '2rem 2rem 5rem' };
+const demoSubtituloStyles = { fontFamily: "'Roboto', sans-serif", fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '480px', margin: '0 auto 2.5rem' };
+const demoCardStyles = {
   width: '100%',
-  maxWidth: '380px',
-  display: 'block',
+  maxWidth: '420px',
   margin: '0 auto',
-  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4))',
+  background: 'var(--surface-2)',
+  border: '0.5px solid var(--border)',
+  borderRadius: '1.2rem',
+  overflow: 'hidden',
+  boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+  textAlign: 'left',
+};
+const demoHeaderStyles = { display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'var(--brand-dark)', padding: '1rem 1.25rem', borderBottom: '0.5px solid var(--border)' };
+const demoAvatarStyles = { width: '36px', height: '36px', borderRadius: '50%', background: 'var(--brand-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', fontSize: '0.8rem', flexShrink: 0 };
+const demoMensajesStyles = { display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.25rem', minHeight: '220px', background: 'var(--surface)' };
+const demoMsgBaseStyles = { padding: '0.75rem 1rem', borderRadius: '1rem', fontSize: '0.85rem', lineHeight: 1.5, maxWidth: '85%' };
+const demoBotMsgStyles = { ...demoMsgBaseStyles, background: 'var(--surface-2)', border: '0.5px solid var(--border)', alignSelf: 'flex-start', borderBottomLeftRadius: '4px' };
+const demoUserMsgStyles = { ...demoMsgBaseStyles, background: 'rgba(132, 189, 0, 0.15)', border: '0.5px solid rgba(132, 189, 0, 0.3)', color: '#fff', alignSelf: 'flex-end', borderBottomRightRadius: '4px' };
+const demoSugerenciasStyles = { display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem 1.25rem', borderTop: '0.5px solid var(--border)' };
+const demoSugerenciaBtnStyles = {
+  background: 'transparent',
+  border: '0.5px solid rgba(132, 189, 0, 0.35)',
+  color: 'var(--brand-green)',
+  borderRadius: '999px',
+  padding: '0.55rem 1rem',
+  fontSize: '0.8rem',
+  fontFamily: "'Poppins', sans-serif",
+  cursor: 'pointer',
+  textAlign: 'left',
 };
 
 // --- ESTILOS: CONTACTO ---
-const contactoSectionStyles = { padding: '4rem 2rem 6rem', textAlign: 'center' };
+const contactoSectionStyles = { padding: '2rem 2rem 6rem', textAlign: 'center' };
 const contactoTitleStyles = { fontSize: 'clamp(2rem, 5vw, 2.75rem)', fontWeight: 700, marginBottom: '1rem' };
 const contactoInfoStyles = { display: 'flex', flexDirection: 'column', gap: '1.8rem', textAlign: 'left' };
 const contactoSubtitleStyles = {

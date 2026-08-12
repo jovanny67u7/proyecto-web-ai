@@ -105,14 +105,45 @@ body::before {
 /* --- FAQ ACCORDION (Nosotros) --- */
 .faq-pregunta:hover { color: var(--brand-green); }
 
-/* --- SECCIÓN DE SERVICIOS EN Z (Home) --- */
-.zpattern-row {
+/* --- SECCIÓN DE SERVICIOS (Home) --- */
+.servicios-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-  padding: 4rem 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 3rem;
+  text-align: left;
 }
+
+/* Tarjeta con borde que se ilumina siguiendo el cursor (--mx/--my los fija
+   el onMouseMove en TarjetaServicio, en Home.jsx). Truco de "mask-composite:
+   exclude" para que el brillo quede confinado al grosor del borde. */
+.glow-card {
+  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  isolation: isolate;
+  transition: border-color 0.3s ease;
+}
+
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(132, 189, 0, 0.9), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.glow-card:hover { border-color: rgba(132, 189, 0, 0.3); }
+.glow-card:hover::before { opacity: 1; }
 
 /* --- SECCIÓN DE CONTACTO (Home) --- */
 .contacto-grid {
@@ -181,9 +212,8 @@ body::before {
     gap: 2.5rem;
   }
 
-  .zpattern-row {
+  .servicios-grid {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
-    padding: 2.5rem 0;
+    gap: 1.5rem;
   }
 }
