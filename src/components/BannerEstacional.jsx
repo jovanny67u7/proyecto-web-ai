@@ -32,20 +32,23 @@ export default function BannerEstacional() {
     <AnimatePresence>
       {visible && (
         <motion.div
+          className="banner-estacional"
           style={bannerStyles}
-          initial={{ opacity: 0, y: -14 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -14 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.35, ease: 'easeOut' }}
         >
-          <motion.span
-            style={{ fontSize: '1.1rem', lineHeight: 1 }}
-            animate={{ scale: [1, 1.15, 1] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            {contenido.icono}
-          </motion.span>
-          <p style={textoStyles}>{contenido.texto}</p>
+          <div style={contenidoStyles}>
+            <motion.span
+              style={{ fontSize: '1.1rem', lineHeight: 1 }}
+              animate={{ scale: [1, 1.15, 1] }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              {contenido.icono}
+            </motion.span>
+            <p style={textoStyles}>{contenido.texto}</p>
+          </div>
           <button type="button" onClick={() => setVisible(false)} style={cerrarStyles} aria-label="Cerrar aviso">✕</button>
         </motion.div>
       )}
@@ -53,16 +56,37 @@ export default function BannerEstacional() {
   );
 }
 
+// Barra de cristal a todo el ancho de la pantalla, pegada justo debajo del
+// navbar fijo. Se sale del <main>/.container con el truco 100vw + translateX
+// para no quedar acotada por el max-width del resto del contenido; el
+// body ya tiene overflow-x:hidden (index.css), así que no genera scroll
+// horizontal.
 const bannerStyles = {
+  position: 'relative',
+  width: '100vw',
+  left: '50%',
+  transform: 'translateX(-50%)',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'center',
   gap: '0.75rem',
-  maxWidth: '640px',
-  margin: '1.5rem auto 0',
-  background: 'rgba(132, 189, 0, 0.08)',
-  border: '0.5px solid rgba(132, 189, 0, 0.3)',
-  borderRadius: '999px',
-  padding: '0.6rem 1rem 0.6rem 1.25rem',
+  padding: '0.85rem 3rem',
+  background: 'rgba(13, 13, 13, 0.55)',
+  backdropFilter: 'blur(14px)',
+  WebkitBackdropFilter: 'blur(14px)',
+  borderBottom: '0.5px solid rgba(132, 189, 0, 0.25)',
+  overflow: 'hidden',
 };
-const textoStyles = { flex: 1, fontSize: '0.82rem', color: 'var(--text)', margin: 0 };
-const cerrarStyles = { background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.85rem', flexShrink: 0 };
+const contenidoStyles = { display: 'flex', alignItems: 'center', gap: '0.6rem', justifyContent: 'center', flexWrap: 'wrap' };
+const textoStyles = { fontSize: '0.82rem', color: 'var(--text)', margin: 0, textAlign: 'center' };
+const cerrarStyles = {
+  position: 'absolute',
+  right: '1.25rem',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  background: 'transparent',
+  border: 'none',
+  color: 'var(--text-muted)',
+  cursor: 'pointer',
+  fontSize: '0.85rem',
+};

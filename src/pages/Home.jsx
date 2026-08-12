@@ -83,7 +83,7 @@ function DemoChat() {
 
   return (
     <div style={demoCardStyles}>
-      <div style={demoHeaderStyles}>
+      <div className="demo-chat-padded" style={demoHeaderStyles}>
         <div style={demoAvatarStyles}>AI</div>
         <div>
           <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Asistente AsíDeSimple</div>
@@ -93,13 +93,13 @@ function DemoChat() {
         </div>
       </div>
 
-      <div style={demoMensajesStyles}>
+      <div className="demo-chat-padded" style={demoMensajesStyles}>
         {mensajes.map((m, i) => (
           <div key={i} style={m.autor === 'bot' ? demoBotMsgStyles : demoUserMsgStyles}>{m.texto}</div>
         ))}
       </div>
 
-      <div style={demoSugerenciasStyles}>
+      <div className="demo-chat-padded" style={demoSugerenciasStyles}>
         {pendientes.length > 0 ? (
           pendientes.map((item) => (
             <button key={item.pregunta} type="button" onClick={() => elegirPregunta(item)} style={demoSugerenciaBtnStyles}>
@@ -317,22 +317,22 @@ const demoSectionStyles = { padding: '2rem 2rem 5rem' };
 const demoSubtituloStyles = { fontFamily: "'Roboto', sans-serif", fontSize: '1rem', color: 'var(--text-muted)', maxWidth: '480px', margin: '0 auto 2.5rem' };
 const demoCardStyles = {
   width: '100%',
-  maxWidth: '420px',
+  maxWidth: '48rem', // equivalente a max-w-3xl: mucho más presencia que los 420px originales
   margin: '0 auto',
   background: 'var(--surface-2)',
   border: '0.5px solid var(--border)',
-  borderRadius: '1.2rem',
+  borderRadius: '1.5rem',
   overflow: 'hidden',
   boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
   textAlign: 'left',
 };
-const demoHeaderStyles = { display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'var(--brand-dark)', padding: '1rem 1.25rem', borderBottom: '0.5px solid var(--border)' };
-const demoAvatarStyles = { width: '36px', height: '36px', borderRadius: '50%', background: 'var(--brand-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', fontSize: '0.8rem', flexShrink: 0 };
-const demoMensajesStyles = { display: 'flex', flexDirection: 'column', gap: '0.75rem', padding: '1.25rem', minHeight: '220px', background: 'var(--surface)' };
-const demoMsgBaseStyles = { padding: '0.75rem 1rem', borderRadius: '1rem', fontSize: '0.85rem', lineHeight: 1.5, maxWidth: '85%' };
+const demoHeaderStyles = { display: 'flex', alignItems: 'center', gap: '1rem', background: 'var(--brand-dark)', padding: '1.5rem 2rem', borderBottom: '0.5px solid var(--border)' };
+const demoAvatarStyles = { width: '44px', height: '44px', borderRadius: '50%', background: 'var(--brand-green)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#fff', fontSize: '0.9rem', flexShrink: 0 };
+const demoMensajesStyles = { display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem', minHeight: '260px', background: 'var(--surface)' };
+const demoMsgBaseStyles = { padding: '0.9rem 1.25rem', borderRadius: '1.1rem', fontSize: '0.95rem', lineHeight: 1.6, maxWidth: '75%' };
 const demoBotMsgStyles = { ...demoMsgBaseStyles, background: 'var(--surface-2)', border: '0.5px solid var(--border)', alignSelf: 'flex-start', borderBottomLeftRadius: '4px' };
 const demoUserMsgStyles = { ...demoMsgBaseStyles, background: 'rgba(132, 189, 0, 0.15)', border: '0.5px solid rgba(132, 189, 0, 0.3)', color: '#fff', alignSelf: 'flex-end', borderBottomRightRadius: '4px' };
-const demoSugerenciasStyles = { display: 'flex', flexDirection: 'column', gap: '0.5rem', padding: '1rem 1.25rem', borderTop: '0.5px solid var(--border)' };
+const demoSugerenciasStyles = { display: 'flex', flexWrap: 'wrap', gap: '0.75rem', padding: '1.5rem 2rem', borderTop: '0.5px solid var(--border)' };
 const demoSugerenciaBtnStyles = {
   background: 'transparent',
   border: '0.5px solid rgba(132, 189, 0, 0.35)',
