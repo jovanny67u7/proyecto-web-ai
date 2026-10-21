@@ -98,9 +98,27 @@ model Cotizacion {
   usuarioId             Int
   productoId            Int
   modulosSeleccionados  String   // JSON serializado: array de módulos elegidos por el usuario
+  telefono              String?  // Opcional: la página actual no lo envía; lo usa el reloj para Llamar/WhatsApp
   fecha                 DateTime @default(now())
   usuario               Usuario  @relation(fields: [usuarioId], references: [id])
   producto              Producto @relation(fields: [productoId], references: [id])
+  notificaciones        Notificacion[]
 
   @@map("cotizaciones")
+}
+
+// -------------------- NOTIFICACIONES AL RELOJ (Wear OS) --------------------
+
+model Notificacion {
+  id           Int         @id @default(autoincrement())
+  cotizacionId Int?        // null para notificaciones de prueba
+  cotizacion   Cotizacion? @relation(fields: [cotizacionId], references: [id], onDelete: SetNull)
+  origen       String      // "cotizacion" | "prueba"
+  evento       String      // "nueva_cotizacion" | "nueva_compra"
+  payload      Json
+  emitidaEn    DateTime    @default(now())
+  entregadaEn  DateTime?   // se llena al recibir el ack del reloj
+
+  @@index([entregadaEn])
+  @@map("notificaciones")
 }

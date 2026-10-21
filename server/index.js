@@ -15,6 +15,7 @@ const clientesRouter = require('./routes/clientes');
 const usuariosRouter = require('./routes/usuarios');
 const cotizacionesRouter = require('./routes/cotizaciones');
 const estadisticasRouter = require('./routes/estadisticas');
+const { adjuntarCanalReloj, emitirLead, relojesConectados } = require('./realtime/reloj');
 
 const app = express();
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -176,6 +177,36 @@ app.use('/api/usuarios', usuariosRouter);
 app.use('/api/cotizaciones', cotizacionesRouter);
 app.use('/api/estadisticas', estadisticasRouter);
 
+// -------------------- SALUD Y PRUEBAS DEL RELOJ --------------------
+app.get('/api/salud', async (req, res) => {
+  let baseDeDatos = 'ok';
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+  } catch {
+    baseDeDatos = 'error';
+  }
+  return res.status(baseDeDatos === 'ok' ? 200 : 503).json({
+    ok: baseDeDatos === 'ok',
+    baseDeDatos,
+    relojesConectados: relojesConectados(),
+    hora: new Date().toISOString(),
+  });
+});
+
+// Dispara una notificación falsa al reloj. Solo ADMIN (JWT de administrador).
+app.post('/api/dev/notificacion-prueba', verificarToken, autorizarRoles('ADMIN'), (req, res) => {
+  const { nombre = 'Cliente de prueba', servicio = 'Chatbot IA', telefono = '524420000000', evento } = req.body || {};
+  res.status(202).json({ mensaje: 'Notificación de prueba en camino.', relojesConectados: relojesConectados() });
+  emitirLead({
+    evento: evento === 'nueva_compra' ? 'nueva_compra' : 'nueva_cotizacion',
+    origen: 'prueba',
+    nombre,
+    servicio,
+    telefono,
+    hora: new Date().toISOString(),
+  });
+});
+
 // Catch-all: cualquier ruta que no sea de la API ni un archivo estático
 // (por ejemplo /privacidad, /productos, etc.) devuelve el index.html de React
 // para que React Router resuelva la navegación en el cliente.
@@ -186,6 +217,9 @@ app.use((req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Servidor de autenticación corriendo en http://localhost:${PORT}`);
 });
+
+// WebSocket del reloj sobre el mismo servidor HTTP (Render expone un solo puerto).
+adjuntarCanalReloj(server);

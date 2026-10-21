@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Secretos y artefactos (servidor y app del reloj)
+.env
+.env.*
+*.db
+*.db-journal
+local.properties
+*.jks
+*.keystore
+google-services.json
