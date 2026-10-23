@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo el sabor "local": permite ws:// (sin TLS) hacia el servidor de la PC. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:networkSecurityConfig="@xml/red_local" />
+</manifest>

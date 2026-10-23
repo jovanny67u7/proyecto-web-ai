@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Campana simple en verde #84BD00 sobre fondo negro (Pantone Black C). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path android:fillColor="#2D2926" android:pathData="M24,0a24,24 0,1 1,0 48a24,24 0,1 1,0 -48z" />
+    <path android:fillColor="#84BD00"
+        android:pathData="M24,10c-5,0 -9,4 -9,9v7l-3,4v2h24v-2l-3,-4v-7c0,-5 -4,-9 -9,-9zM20,34a4,4 0,0 0,8 0z" />
+</vector>
