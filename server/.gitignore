@@ -7,3 +7,9 @@ node_modules
 # Base de datos SQLite local (obsoleta tras migrar a PostgreSQL para Render)
 *.db
 *.db-journal
+
+# Archivos subidos por usuarios: solo se versionan los logos permanentes del seed.
+uploads/*
+!uploads/cadlev.png
+!uploads/entrevalles.png
+!uploads/nowus.png

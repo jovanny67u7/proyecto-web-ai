@@ -1,0 +1,14 @@
+.gradle/
+build/
+app/build/
+.idea/
+.kotlin/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+# Contiene sdk.dir, la URL del servidor y el DEVICE_TOKEN: nunca se versiona.
+local.properties
+*.jks
+*.keystore
+google-services.json

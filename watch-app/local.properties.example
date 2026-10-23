@@ -1,0 +1,12 @@
+# Copia este archivo como local.properties (NO se versiona) y rellena los valores.
+sdk.dir=C\:\\Users\\TU_USUARIO\\AppData\\Local\\Android\\Sdk
+
+# Mismo valor que la variable DEVICE_TOKEN del servidor (Render -> Environment).
+reloj.deviceToken=pon-aqui-el-token-del-reloj
+
+# Sabor "prod": servidor desplegado.
+reloj.wsUrl.prod=wss://proyecto-web-ai.onrender.com/ws/reloj
+
+# Sabor "local": servidor en tu PC. 10.0.2.2 es el localhost de la PC visto
+# desde el emulador. Para un reloj real en tu Wi-Fi usa la IP de tu PC.
+reloj.wsUrl.local=ws://10.0.2.2:3001/ws/reloj
