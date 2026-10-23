@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -42,12 +41,13 @@ class RelojService : Service() {
             }
         }
 
+        // Es el callback de la red POR DEFECTO: onLost significa que ya no hay
+        // ninguna. Si otra red toma su lugar, llega un onAvailable después.
+        // (Consultar activeNetwork aquí devuelve todavía la red perdida.)
         override fun onLost(network: Network) {
             principal.post {
-                val hay = red.activeNetwork?.let { red.getNetworkCapabilities(it) }
-                    ?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
-                Log.i(ClienteReloj.TAG, "Red perdida (¿queda otra red? $hay)")
-                EstadoReloj.cambiarRed(hay)
+                Log.i(ClienteReloj.TAG, "Red perdida")
+                EstadoReloj.cambiarRed(false)
             }
         }
     }

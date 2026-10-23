@@ -66,7 +66,7 @@ private fun Redondo(
         modifier = modifier
             .fillMaxSize()
             .background(Negro)
-            .padding(horizontal = 22.dp, vertical = 18.dp),
+            .padding(horizontal = 22.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center,
     ) { contenido() }
 }
@@ -88,18 +88,20 @@ fun PantallaReposo(canal: EstadoCanal, historial: List<Lead>, alVerHistorial: ()
 
     Redondo {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(horaCorta(ahora), color = Blanco, fontSize = 44.sp, fontWeight = FontWeight.Light)
-            Text(formatoFecha.format(ahora), color = Gris, fontSize = 12.sp)
-            Spacer(Modifier.height(10.dp))
+            Text(horaCorta(ahora), color = Blanco, fontSize = 38.sp, fontWeight = FontWeight.Light)
+            Text(formatoFecha.format(ahora), color = Gris, fontSize = 11.sp)
+            Spacer(Modifier.height(6.dp))
+            // Dos líneas fijas para que "DESCONECTADO" no desplace el resto.
+            Text("Canal en vivo", color = Gris, fontSize = 10.sp)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(8.dp).clip(CircleShape).background(colorEstado))
                 Spacer(Modifier.width(5.dp))
-                Text("Canal en vivo: $textoEstado", color = Blanco, fontSize = 10.sp)
+                Text(textoEstado, color = Blanco, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 1)
             }
-            Spacer(Modifier.height(6.dp))
-            Text("Sin leads nuevos", color = Gris, fontSize = 13.sp)
+            Spacer(Modifier.height(4.dp))
+            Text("Sin leads nuevos", color = Gris, fontSize = 12.sp)
             if (historial.isNotEmpty()) {
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(6.dp))
                 Text(
                     "Historial (${historial.size})",
                     color = Verde,
