@@ -12,7 +12,8 @@
   "msRespuesta": 52,
   "msDisparoAck": 253,
   "msRecibido": -934,
-  "msVibracion": -781
+  "msVibracion": -781,
+  "msVib": 153
  },
  {
   "intento": 2,
@@ -27,7 +28,8 @@
   "msRespuesta": 361,
   "msDisparoAck": 882,
   "msRecibido": -423,
-  "msVibracion": -227
+  "msVibracion": -227,
+  "msVib": 196
  },
  {
   "intento": 3,
@@ -42,7 +44,8 @@
   "msRespuesta": 17,
   "msDisparoAck": 119,
   "msRecibido": -991,
-  "msVibracion": -953
+  "msVibracion": -953,
+  "msVib": 38
  },
  {
   "intento": 4,
@@ -57,7 +60,8 @@
   "msRespuesta": 19,
   "msDisparoAck": 154,
   "msRecibido": -978,
-  "msVibracion": -879
+  "msVibracion": -879,
+  "msVib": 99
  },
  {
   "intento": 5,
@@ -72,7 +76,8 @@
   "msRespuesta": 15,
   "msDisparoAck": 134,
   "msRecibido": -994,
-  "msVibracion": -915
+  "msVibracion": -915,
+  "msVib": 79
  },
  {
   "intento": 6,
@@ -87,7 +92,8 @@
   "msRespuesta": 18,
   "msDisparoAck": 114,
   "msRecibido": -983,
-  "msVibracion": -930
+  "msVibracion": -930,
+  "msVib": 53
  },
  {
   "intento": 7,
@@ -102,7 +108,8 @@
   "msRespuesta": 15,
   "msDisparoAck": 77,
   "msRecibido": -998,
-  "msVibracion": -961
+  "msVibracion": -961,
+  "msVib": 37
  },
  {
   "intento": 8,
@@ -117,7 +124,8 @@
   "msRespuesta": 25,
   "msDisparoAck": 116,
   "msRecibido": -980,
-  "msVibracion": -906
+  "msVibracion": -906,
+  "msVib": 74
  },
  {
   "intento": 9,
@@ -132,7 +140,8 @@
   "msRespuesta": 24,
   "msDisparoAck": 125,
   "msRecibido": -971,
-  "msVibracion": -911
+  "msVibracion": -911,
+  "msVib": 60
  },
  {
   "intento": 10,
@@ -147,6 +156,7 @@
   "msRespuesta": 22,
   "msDisparoAck": 116,
   "msRecibido": -958,
-  "msVibracion": -907
+  "msVibracion": -907,
+  "msVib": 51
  }
 ]
