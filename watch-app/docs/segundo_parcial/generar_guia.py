@@ -63,9 +63,9 @@ def md(t):
     return re.sub(r"`(.+?)`", r'<font name="Mono" color="#1F5F8B">\1</font>', t)
 
 
-def h1(t):
+def h1(t, minimo=1.7):
     secciones.append(t)
-    story.append(CondPageBreak(1.7 * inch))
+    story.append(CondPageBreak(minimo * inch))
     story.append(Paragraph(f"{len(secciones)}. {md(t)}", st["h1"]))
     story.append(Table([[""]], colWidths=[ANCHO], rowHeights=[2], style=[("BACKGROUND", (0, 0), (-1, -1), VERDE)]))
     story.append(Spacer(1, 6))
@@ -158,7 +158,7 @@ tabla(["Qué", "Dónde"], [
     ["Canal del reloj", "`wss://proyecto-web-ai.onrender.com/ws/reloj`"],
 ], [2.6, 4.7])
 
-h1("Cómo funciona")
+h1("Cómo funciona", 5)
 imagen(os.path.join(AQUI, "diagrama_comunicacion.png"), ANCHO, ANCHO / 2)
 h2("El recorrido de una cotización")
 lista([
@@ -335,7 +335,7 @@ tabla(["Permiso", "Por qué"], [
     ["`<queries>` para https", "Saber si alguna app del reloj abre enlaces wa.me (Android 11+)."],
 ], [3.0, 4.3])
 
-h1("Pantallas y conexión con el backend")
+h1("Pantallas y conexión con el backend", 3)
 p("Las pantallas no hablan directo con el servidor: leen el estado que el servicio publica en `EstadoReloj`.")
 pantalla("01_reposo_conectado_circular.png", "06_reposo_con_historial_circular.png", "Reposo",
          "Muestra el estado del socket: `onOpen` pone CONECTADO; `onClosed` u `onFailure` ponen DESCONECTADO e inician la reconexión. El botón Historial aparece cuando ya hay leads guardados. \"Sin leads nuevos\" es un texto fijo en esta versión.")
@@ -354,7 +354,7 @@ h2("Mockup de la notificación básica")
 imagen(os.path.join(AQUI, "mockup_notificacion_basica.png"), 5.6 * inch, 5.6 * inch * 760 / 1500,
        "Primera versión de la alerta: solo aviso y vibración. El nombre es ficticio.")
 
-h1("Paso a paso para correrlo")
+h1("Paso a paso para correrlo", 3)
 nota("Antes de empezar", "Con 8 GB de RAM, compila con el emulador cerrado. Con los dos abiertos, la memoria se agota y Gradle se queda colgado. Los comandos son para PowerShell.")
 h2("A. Servidor local")
 codigo('''
@@ -374,9 +374,10 @@ cd asidesimple-ai\\watch-app
 .\\gradlew.bat --stop                  # libera memoria
 
 $sdk = "$env:LOCALAPPDATA\\Android\\Sdk"
+Set-Alias adb "$sdk\\platform-tools\\adb.exe"     # adb no está en el PATH; vale para esta terminal
 & "$sdk\\emulator\\emulator.exe" -avd Wear_OS_Small_Round_Ligero -no-snapshot-save -no-audio
-& "$sdk\\platform-tools\\adb.exe" install -r app\\build\\outputs\\apk\\local\\debug\\app-local-debug.apk
-& "$sdk\\platform-tools\\adb.exe" shell am start -n ai.asidesimple.reloj.local/ai.asidesimple.reloj.MainActivity''')
+adb install -r app\\build\\outputs\\apk\\local\\debug\\app-local-debug.apk
+adb shell am start -n ai.asidesimple.reloj.local/ai.asidesimple.reloj.MainActivity''')
 h2("C. Comprobar que funciona")
 codigo('''
 curl.exe localhost:3001/api/salud            # debe decir "relojesConectados":1
@@ -473,7 +474,7 @@ for q, a in [
     ("¿Por qué el ack se puede repetir sin problema?", "El update filtra `entregadaEn: null`: el segundo ack no encuentra filas y no cambia la hora."),
     ("¿Para qué sirve el ping cada 25 s?", "Mantiene viva la conexión ante proxies y detecta relojes caídos."),
     ("¿Por qué un servicio en primer plano?", "La Activity muere al salir de la app; el servicio sigue recibiendo con la pantalla apagada."),
-    ("¿Dónde vive DEVICE_TOKEN?", "En Render o `.env` para el servidor, en `local.properties` para el reloj y en GitHub Secrets para el CI. Nunca en git."),
+    ("¿Dónde vive DEVICE_TOKEN?", "En Render o `.env` para el servidor, en `local.properties` para el reloj y en GitHub Secrets si el CI debe generar el APK con token. Nunca en git."),
     ("¿Qué es 10.0.2.2?", "El localhost de la PC visto desde el emulador."),
     ("¿Por qué no hay app companion?", "El reloj se conecta directo al servidor. El teléfono solo presta internet cuando el reloj no tiene red propia."),
     ("¿Qué significa que la bitácora se hizo en emulador?", "Se comprobó que Android recibió el patrón de vibración, no que alguien la sintiera."),
