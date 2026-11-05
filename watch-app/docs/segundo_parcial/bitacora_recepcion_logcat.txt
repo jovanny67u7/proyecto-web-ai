@@ -1,0 +1,33 @@
+--------- beginning of kernel
+--------- beginning of system
+--------- beginning of main
+11-05 01:16:02.012 I/RelojLeads(10225): Lead recibido #1: Nueva cotización de Laura Martinez (Automatizaciones)
+11-05 01:16:02.165 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:16:02.166 I/RelojLeads(10225): Ack enviado #1
+11-05 01:16:12.829 I/RelojLeads(10225): Lead recibido #2: Nueva cotización de Laura Martinez (CRM Inteligente)
+11-05 01:16:13.025 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:16:13.025 I/RelojLeads(10225): Ack enviado #2
+11-05 01:16:23.278 I/RelojLeads(10225): Lead recibido #3: Nueva cotización de Laura Martinez (Chatbot IA)
+11-05 01:16:23.316 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:16:23.317 I/RelojLeads(10225): Ack enviado #3
+11-05 01:16:33.427 I/RelojLeads(10225): Lead recibido #4: Nueva cotización de Laura Martinez (Automatizaciones)
+11-05 01:16:33.526 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:16:33.527 I/RelojLeads(10225): Ack enviado #4
+11-05 01:16:43.651 I/RelojLeads(10225): Lead recibido #5: Nueva cotización de Laura Martinez (CRM Inteligente)
+11-05 01:16:43.730 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:16:43.731 I/RelojLeads(10225): Ack enviado #5
+11-05 01:16:53.906 I/RelojLeads(10225): Lead recibido #6: Nueva cotización de Laura Martinez (Chatbot IA)
+11-05 01:16:53.959 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:16:53.980 I/RelojLeads(10225): Ack enviado #6
+11-05 01:17:04.032 I/RelojLeads(10225): Lead recibido #7: Nueva cotización de Laura Martinez (Automatizaciones)
+11-05 01:17:04.069 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:17:04.080 I/RelojLeads(10225): Ack enviado #7
+11-05 01:17:14.182 I/RelojLeads(10225): Lead recibido #8: Nueva cotización de Laura Martinez (CRM Inteligente)
+11-05 01:17:14.256 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:17:14.259 I/RelojLeads(10225): Ack enviado #8
+11-05 01:17:24.341 I/RelojLeads(10225): Lead recibido #9: Nueva cotización de Laura Martinez (Chatbot IA)
+11-05 01:17:24.401 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:17:24.402 I/RelojLeads(10225): Ack enviado #9
+11-05 01:17:34.511 I/RelojLeads(10225): Lead recibido #10: Nueva cotización de Laura Martinez (Automatizaciones)
+11-05 01:17:34.562 I/RelojLeads(10225): Vibración: patrón 0, 200, 100, 200, 100, 400
+11-05 01:17:34.563 I/RelojLeads(10225): Ack enviado #10
